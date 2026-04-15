@@ -1,0 +1,43 @@
+name: Deploy Catalog Site to GitHub Pages
+
+on:
+  push:
+    branches: [catalog-site]
+    paths:
+      - 'catalog-entities/extensions/plugins/**'
+      - 'workspaces/*/metadata/**'
+      - 'tools/catalog-site/**'
+      - '.github/workflows/deploy-catalog-site.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: cd tools/catalog-site && npm ci && npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: tools/catalog-site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
