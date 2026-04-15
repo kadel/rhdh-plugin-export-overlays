@@ -48,6 +48,7 @@ function renderCard(plugin: PluginViewModel): string {
       <div class="card-meta">
         <span class="badge ${badgeClass(plugin.supportLevel)}">${badgeLabel(plugin.supportLevel)}</span>
         ${plugin.categories[0] ? `<span class="category-chip">${escapeHtml(plugin.categories[0])}</span>` : ''}
+        ${plugin.packages[0]?.version ? `<span class="version">v${escapeHtml(plugin.packages[0].version)}</span>` : ''}
       </div>
       <span>${escapeHtml(plugin.author)}</span>
     </div>
