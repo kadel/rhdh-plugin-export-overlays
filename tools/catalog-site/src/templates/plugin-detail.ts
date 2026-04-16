@@ -85,24 +85,19 @@ function renderSidebar(plugin: PluginViewModel): string {
 
 function renderPackageRow(pkg: PluginViewModel['packages'][0]): string {
   const configHtml = pkg.appConfigExamples.length > 0
-    ? `<details class="config-details">
-        <summary>Configuration examples (${pkg.appConfigExamples.length})</summary>
-        ${pkg.appConfigExamples.map((ex) => `
-          <div class="config-block">
-            <h4>${escapeHtml(ex.title)}</h4>
-            <pre><code>${escapeHtml(ex.yaml)}</code></pre>
-          </div>
-        `).join('')}
-      </details>`
+    ? pkg.appConfigExamples.map((ex) => `
+        <div class="config-block">
+          <h4>${escapeHtml(ex.title)}</h4>
+          <pre><code>${escapeHtml(ex.yaml)}</code></pre>
+        </div>
+      `).join('')
     : '';
 
   const artifactHtml = pkg.dynamicArtifact
-    ? `<details class="config-details">
-        <summary>OCI Artifact</summary>
-        <div class="config-block">
-          <pre><code>${escapeHtml(pkg.dynamicArtifact)}</code></pre>
-        </div>
-      </details>`
+    ? `<div class="config-block">
+        <h4>OCI Artifact</h4>
+        <pre><code>${escapeHtml(pkg.dynamicArtifact)}</code></pre>
+      </div>`
     : '';
 
   return `<tr>
