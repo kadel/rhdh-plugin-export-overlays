@@ -83,7 +83,7 @@ function renderSidebar(plugin: PluginViewModel): string {
   return sections.join('');
 }
 
-function renderPackageRow(pkg: PluginViewModel['packages'][0]): string {
+function renderPackageCard(pkg: PluginViewModel['packages'][0]): string {
   const configHtml = pkg.appConfigExamples.length > 0
     ? pkg.appConfigExamples.map((ex) => `
         <div class="config-block">
@@ -100,17 +100,19 @@ function renderPackageRow(pkg: PluginViewModel['packages'][0]): string {
       </div>`
     : '';
 
-  return `<tr>
-    <td>
-      <div class="pkg-name">${escapeHtml(pkg.packageName)}</div>
-      ${artifactHtml}
-      ${configHtml}
-    </td>
-    <td>${escapeHtml(pkg.version)}</td>
-    <td>${escapeHtml(pkg.role)}</td>
-    <td><span class="badge ${badgeClass(pkg.supportLevel)}">${badgeLabel(pkg.supportLevel)}</span></td>
-    <td>${escapeHtml(pkg.backstageVersion)}</td>
-  </tr>`;
+  return `<div class="pkg-card">
+    <div class="pkg-card-header">
+      <div class="pkg-card-name">${escapeHtml(pkg.packageName)}</div>
+      <div class="pkg-card-meta">
+        <span class="badge ${badgeClass(pkg.supportLevel)}">${badgeLabel(pkg.supportLevel)}</span>
+        <span class="pkg-card-field"><strong>v</strong>${escapeHtml(pkg.version)}</span>
+        <span class="pkg-card-field">${escapeHtml(pkg.role)}</span>
+        <span class="pkg-card-field">Backstage ${escapeHtml(pkg.backstageVersion)}</span>
+      </div>
+    </div>
+    ${artifactHtml}
+    ${configHtml}
+  </div>`;
 }
 
 function renderPackages(plugin: PluginViewModel): string {
@@ -118,21 +120,9 @@ function renderPackages(plugin: PluginViewModel): string {
     return '<p>No packages linked to this plugin.</p>';
   }
 
-  return `
-    <table class="packages-table">
-      <thead>
-        <tr>
-          <th>Package</th>
-          <th>Version</th>
-          <th>Role</th>
-          <th>Support</th>
-          <th>Backstage</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${plugin.packages.map(renderPackageRow).join('')}
-      </tbody>
-    </table>`;
+  return `<div class="pkg-list">
+    ${plugin.packages.map(renderPackageCard).join('')}
+  </div>`;
 }
 
 export function pluginDetailPage(plugin: PluginViewModel): string {
